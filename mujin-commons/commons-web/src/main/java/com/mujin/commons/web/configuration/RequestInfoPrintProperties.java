@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2025/11/23
  */
 @Data
-public class RequestInfoPrintConfig {
+public class RequestInfoPrintProperties {
     /**
      * 打印 uri
      */

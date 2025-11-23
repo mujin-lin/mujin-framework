@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.mujin</groupId>
+        <artifactId>mujin-framework</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>com.mujin.boot</groupId>
+    <artifactId>mujin-boot-starter</artifactId>
+    <name>mujin-boot-starter</name>
+    <packaging>pom</packaging>
+    <modules>
+        <module>mujin-web-boot-starter</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.mujin.commons</groupId>
+                <artifactId>commons-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

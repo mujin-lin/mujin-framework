@@ -15,6 +15,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>mujin-web-boot-starter</module>
+        <module>mujin-web-security</module>
+        <module>mujin-web-cache</module>
+        <module>mujin-web-orm</module>
+        <module>mujin-web-logging</module>
+        <module>mujin-web-document</module>
     </modules>
 
     <properties>

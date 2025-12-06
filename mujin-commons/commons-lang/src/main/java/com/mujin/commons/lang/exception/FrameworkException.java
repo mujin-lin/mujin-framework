@@ -1,6 +1,8 @@
 package com.mujin.commons.lang.exception;
 
 
+import com.mujin.commons.lang.code.ErrorCodeDefinition;
+
 /**
  * 框架内异常
  *
@@ -14,11 +16,11 @@ public class FrameworkException extends CommonsException {
         super(errMsg);
     }
 
-    public FrameworkException(int errCode, String errMsg) {
+    public FrameworkException(ErrorCodeDefinition errCode, String errMsg) {
         super(errCode, errMsg);
     }
 
-    public FrameworkException(int errCode, String errMsg, Throwable cause) {
+    public FrameworkException(ErrorCodeDefinition errCode, String errMsg, Throwable cause) {
         super(errCode, errMsg, cause);
     }
 

@@ -22,7 +22,7 @@ public class CorsConfigProperties {
     /**
      * 允许跨域的header
      */
-    private String[] allowedHeaders = {"requestsource", "RequestSource", "Referer", "sec-ch-ua", "sec-ch-ua-mobile", "Sec-Fetch-Dest",
+    private String[] allowedHeaders = {"user-agent", "user-agent", "Referer", "sec-ch-ua", "sec-ch-ua-mobile", "Sec-Fetch-Dest",
             "Sec-Fetch-Mode", "Sec-Fetch-Site", "User-Agent", "Host", "Authorization", "Origin", "X-Requested-With",
             "ContentType", "Content-Type", "Accept", "Accept-Encoding", "Accept-Language", "custom-agent", "Custom-Agent"};
     /**

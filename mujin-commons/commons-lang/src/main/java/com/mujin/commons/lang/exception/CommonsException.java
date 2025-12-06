@@ -1,5 +1,7 @@
 package com.mujin.commons.lang.exception;
 
+import com.mujin.commons.lang.code.ErrorCodeDefinition;
+import com.mujin.commons.lang.code.BaseErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,19 +25,19 @@ public class CommonsException extends RuntimeException {
     private String errMsg;
 
     public CommonsException(String errMsg) {
-        this(1000, errMsg);
+        this(BaseErrorCode.UNKNOWN_ERROR, errMsg);
     }
 
-    public CommonsException(int errCode, String errMsg) {
+    public CommonsException(ErrorCodeDefinition errCode, String errMsg) {
         super(errMsg);
-        this.errCode = errCode;
+        this.errCode = errCode.errorCode();
         this.errMsg = errMsg;
     }
 
-    public CommonsException(int errCode, String errMsg, Throwable cause) {
+    public CommonsException(ErrorCodeDefinition errCode, String errMsg, Throwable cause) {
         super(errMsg, cause);
         this.errMsg = errMsg;
-        this.errCode = errCode;
+        this.errCode = errCode.errorCode();
     }
 
     public CommonsException(Throwable cause) {

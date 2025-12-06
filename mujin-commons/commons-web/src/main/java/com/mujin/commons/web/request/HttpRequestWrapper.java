@@ -38,6 +38,7 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
     public HttpRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         body = StreamUtils.copyToByteArray(request.getInputStream());
+        this.initHeader(request);
 
     }
 

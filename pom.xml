@@ -91,7 +91,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-<!--                <version>${maven.source.version}</version>-->
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -110,13 +109,11 @@
                     <additionalOptions>
                         <additionalOption>-Xdoclint:none</additionalOption>
                         <additionalOption>--ignore-source-errors</additionalOption>
-                        <additionalOption>-proc:none</additionalOption>
-                        <additionalOption>-Xlint:-options</additionalOption>  <!-- 隐藏options相关警告 -->
                     </additionalOptions>
                     <!-- 解决注解处理器警告 -->
                     <additionalJOptions>
-                        <additionalJOption>-proc:none</additionalJOption>
-                        <additionalJOption>-Xlint:-options</additionalJOption>
+                        <!-- 抑制所有Javadoc警告 -->
+                        <additionalOption>-Xdoclint:none</additionalOption>
                     </additionalJOptions>
                     <!-- 5. 跳过缺失包的检查 -->
                     <doclint>none</doclint>
@@ -129,11 +126,15 @@
                             <goal>jar</goal>  <!-- 生成javadoc jar -->
                         </goals>
                         <configuration> <!-- add this to disable checking -->
-                            <doclint>none</doclint>
-                            <!-- 执行特定配置 -->
+                            <additionalJOptions>
+                                <!-- 抑制所有Javadoc警告 -->
+                                <additionalOption>-Xdoclint:none</additionalOption>
+                            </additionalJOptions>
                             <additionalOptions>
-                                <additionalOption>-proc:none</additionalOption>
+                                <additionalOption>-Xdoclint:none</additionalOption>
+                                <additionalOption>--ignore-source-errors</additionalOption>
                             </additionalOptions>
+                            <doclint>none</doclint>
                         </configuration>
                     </execution>
                 </executions>

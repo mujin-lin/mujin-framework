@@ -46,7 +46,6 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
      * 创建对象的时候读取 header
      *
      * @param request the request
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     private void initHeader(HttpServletRequest request) {
@@ -72,7 +71,6 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
      * 获取 body 字符串形式
      *
      * @return String
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     public String getBodyJsonStr() {
@@ -84,7 +82,6 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
      *
      * @param name   header 名
      * @param values header 值集合
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     public void addHeader(String name, String... values) {

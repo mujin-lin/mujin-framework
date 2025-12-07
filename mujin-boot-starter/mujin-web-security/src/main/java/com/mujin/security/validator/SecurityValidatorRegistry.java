@@ -23,7 +23,6 @@ public class SecurityValidatorRegistry {
      *
      * @param securityValidator 安全验证
      * @return SecurityValidatorRegistration
-     * @author chenglin.wu
      * @date 2025/12/07
      */
     private SecurityValidatorRegistration addValidator(SecurityValidator securityValidator) {

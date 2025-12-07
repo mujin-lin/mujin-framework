@@ -20,7 +20,6 @@ public class MujinWebAutoConfiguration {
      * 使用加密解密的 manager 配置指定
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean
@@ -34,7 +33,6 @@ public class MujinWebAutoConfiguration {
      * 跨域配置的类
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean
@@ -48,7 +46,6 @@ public class MujinWebAutoConfiguration {
      * 请求日志打印配置
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean

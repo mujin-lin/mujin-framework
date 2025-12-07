@@ -1,14 +1,13 @@
 package com.mujin.security.validator;
 
+
+import lombok.Getter;
 /**
  * 校验器注册包装类
  *
  * @author chenglin.wu
  * @date 2025/12/6
  */
-
-import lombok.Getter;
-
 @Getter
 public class SecurityValidatorRegistration {
 
@@ -37,7 +36,6 @@ public class SecurityValidatorRegistration {
      *
      * @param order 执行顺序
      * @return SecurityValidatorRegistration
-     * @author chenglin.wu
      * @date 2025/12/07
      */
     public SecurityValidatorRegistration order(int order) {

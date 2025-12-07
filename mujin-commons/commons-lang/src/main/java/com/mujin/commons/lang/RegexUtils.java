@@ -96,7 +96,6 @@ public final class RegexUtils {
      *
      * @return boolean
      * @param: eMail 邮箱号
-     * @author chenglin.wu
      * @date 2021-06-03
      */
     public static boolean isEMail(String eMail) {

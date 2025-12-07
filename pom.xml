@@ -85,6 +85,9 @@
                     <target>21</target>
                     <!-- 可选的：设置编译器的编码 -->
                     <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-Xlint:-options</arg> <!-- 隐藏相关提示 -->
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <!-- 要生成Javadoc和Source jar文件 -->
@@ -109,6 +112,8 @@
                     <additionalOptions>
                         <additionalOption>-Xdoclint:none</additionalOption>
                         <additionalOption>--ignore-source-errors</additionalOption>
+                        <!-- 如果确实需要，使用等价的现代参数 -->
+                        <additionalOption>--allow-script-in-comments</additionalOption>
                     </additionalOptions>
                     <!-- 解决注解处理器警告 -->
                     <additionalJOptions>

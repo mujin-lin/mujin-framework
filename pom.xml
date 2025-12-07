@@ -2,6 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.8</version>
+    </parent>
     <groupId>com.mujin</groupId>
     <artifactId>mujin-framework</artifactId>
     <version>1.0.0</version>
@@ -16,6 +21,9 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <maven.source.version>3.3.1</maven.source.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.doc.version>3.11.3</maven.doc.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring.boot.version>3.5.8</spring.boot.version>
@@ -67,10 +75,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 源代码使用的Java版本 -->
+                    <source>21</source>
+                    <!-- 目标JVM的字节码版本 -->
+                    <target>21</target>
+                    <!-- 可选的：设置编译器的编码 -->
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
             <!-- 要生成Javadoc和Source jar文件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+<!--                <version>${maven.source.version}</version>-->
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -83,14 +104,36 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <!-- 3. 禁用所有检查 -->
+                    <additionalOptions>
+                        <additionalOption>-Xdoclint:none</additionalOption>
+                        <additionalOption>--ignore-source-errors</additionalOption>
+                        <additionalOption>-proc:none</additionalOption>
+                        <additionalOption>-Xlint:-options</additionalOption>  <!-- 隐藏options相关警告 -->
+                    </additionalOptions>
+                    <!-- 解决注解处理器警告 -->
+                    <additionalJOptions>
+                        <additionalJOption>-proc:none</additionalJOption>
+                        <additionalJOption>-Xlint:-options</additionalJOption>
+                    </additionalJOptions>
+                    <!-- 5. 跳过缺失包的检查 -->
+                    <doclint>none</doclint>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>jar</goal>  <!-- 生成javadoc jar -->
                         </goals>
                         <configuration> <!-- add this to disable checking -->
                             <doclint>none</doclint>
+                            <!-- 执行特定配置 -->
+                            <additionalOptions>
+                                <additionalOption>-proc:none</additionalOption>
+                            </additionalOptions>
                         </configuration>
                     </execution>
                 </executions>

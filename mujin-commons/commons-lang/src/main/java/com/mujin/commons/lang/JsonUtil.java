@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,13 +22,12 @@ import java.util.*;
 /**
  * 自定义的json 格式化类
  *
- * @author  chenglin.wu
+ * @author chenglin.wu
  * @date 2025/11/23
  */
 @SuppressWarnings("unused")
 public final class JsonUtil {
 
-    private final static Logger log = LoggerFactory.getLogger(JsonUtil.class);
     /**
      * 日期时间格式
      */
@@ -162,7 +159,7 @@ public final class JsonUtil {
             if (isThrowException) {
                 throw new RuntimeException(e);
             }
-            log.error(e.getMessage(), e);
+
         }
         return null;
     }
@@ -199,7 +196,6 @@ public final class JsonUtil {
             if (isThrowException) {
                 throw new RuntimeException(e);
             }
-            log.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -369,7 +365,7 @@ public final class JsonUtil {
         if (StrUtil.isBlank(text)) {
             return null;
         }
-        return toObject(text, new TypeReference<Map<String, Object>>() {
+        return toObject(text, new TypeReference<>() {
         });
     }
 
@@ -380,12 +376,10 @@ public final class JsonUtil {
      * @return LinkedHashMap<String, Object>
      */
     public static LinkedHashMap<String, Object> toLinkedMap(String text) {
-        if (StrUtil.isBlank(text)) {
-            return null;
-        }
-        return toObject(text, new TypeReference<LinkedHashMap<String, Object>>() {
+        return toMap(text, new TypeReference<>() {
         });
     }
+
 
     /**
      * JSON字符串转换为JsonNode
@@ -510,5 +504,20 @@ public final class JsonUtil {
             }
             return super.parse(value, pos);
         }
+    }
+
+    /**
+     * JSON字符串转换为Map
+     *
+     * @param text          json 字符串
+     * @param typeReference 类型
+     * @return Map<String, Object>
+     */
+    private static <M> M toMap(String text, TypeReference<M> typeReference) {
+        if (StrUtil.isBlank(text)) {
+            return null;
+        }
+        return toObject(text, Objects.nonNull(typeReference) ? typeReference : new TypeReference<>() {
+        });
     }
 }

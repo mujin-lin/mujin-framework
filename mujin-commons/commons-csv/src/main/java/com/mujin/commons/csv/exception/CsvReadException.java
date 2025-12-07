@@ -1,5 +1,7 @@
 package com.mujin.commons.csv.exception;
 
+import com.mujin.commons.csv.enums.CsvErrorEnum;
+
 /**
  * 读取csv 文件成指定类集合时的异常类
  *
@@ -8,10 +10,10 @@ package com.mujin.commons.csv.exception;
 public class CsvReadException extends CsvException {
 
     public CsvReadException(String message) {
-        super(101, message);
+        super(CsvErrorEnum.CSV_READ_ERROR, message);
     }
 
     public CsvReadException(String message, Throwable cause) {
-        super(101, message, cause);
+        super(CsvErrorEnum.CSV_READ_ERROR, message, cause);
     }
 }

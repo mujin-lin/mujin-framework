@@ -25,7 +25,7 @@ public class SecurityValidatorRegistry {
      * @return SecurityValidatorRegistration
      * @date 2025/12/07
      */
-    private SecurityValidatorRegistration addValidator(SecurityValidator securityValidator) {
+    public SecurityValidatorRegistration addValidator(SecurityValidator securityValidator) {
         SecurityValidatorRegistration registration = new SecurityValidatorRegistration(securityValidator);
         registrations.add(registration);
         return registration;

@@ -14,7 +14,7 @@ public class SecurityValidatorRegistration {
     /**
      * 安全验证器
      */
-    private SecurityValidator securityValidator;
+    private final SecurityValidator securityValidator;
     /**
      * 排序
      */
@@ -23,7 +23,7 @@ public class SecurityValidatorRegistration {
     /**
      * 创建时间
      */
-    private long timestamp;
+    private final long timestamp;
 
 
     public SecurityValidatorRegistration(SecurityValidator securityValidator) {

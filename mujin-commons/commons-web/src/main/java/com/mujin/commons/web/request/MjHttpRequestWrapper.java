@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mujin.commons.lang.RegexUtils;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
@@ -25,7 +26,7 @@ import java.util.*;
  * @author chenglin.wu
  * @date 2025/11/23
  */
-public class HttpRequestWrapper extends HttpServletRequestWrapper {
+public class MjHttpRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 请求体
      */
@@ -35,7 +36,7 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
      */
     private final Map<String, List<String>> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    public HttpRequestWrapper(HttpServletRequest request) throws IOException {
+    public MjHttpRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         body = StreamUtils.copyToByteArray(request.getInputStream());
         this.initHeader(request);
@@ -97,6 +98,15 @@ public class HttpRequestWrapper extends HttpServletRequestWrapper {
 
     }
 
+    /**
+     * 获取真实的 request
+     *
+     * @return HttpServletRequest
+     * @date 2025/12/10
+     */
+    public ServletRequest getHttpServletRequest() {
+        return super.getRequest();
+    }
 
     @Override
     public Enumeration<String> getHeaders(String name) {

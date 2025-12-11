@@ -12,12 +12,17 @@ public final class SecurityConfigurationConstants {
     }
 
     /**
+     * 配置信息
+     */
+    public static final String MJ_SECURITY_REQUEST_KEY = "mujin.web.security.request";
+
+    /**
      * 是否启用 request 包装类 true 启用
      */
-    public static final String ENABLE_REQUEST_WRAPPER = "mujin.web.security.request.wrapper.enable";
+    public static final String ENABLE_REQUEST_WRAPPER = "mujin.web.security.request.wrapper-enable";
     /**
      * 是否启用安全验证
      */
-    public static final String ENABLE_SECURITY_VALIDATOR = "mujin.web.security.request.security.enable";
+    public static final String ENABLE_SECURITY_VALIDATOR = "mujin.web.security.request.validator-enable";
 }
 

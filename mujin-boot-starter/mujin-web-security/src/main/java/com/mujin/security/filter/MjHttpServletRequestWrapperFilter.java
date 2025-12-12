@@ -17,8 +17,7 @@ import java.io.IOException;
 public class MjHttpServletRequestWrapperFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest =(HttpServletRequest) request;
-        log.debug("request uri:{}", httpServletRequest.getRequestURI());
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         chain.doFilter(new MjHttpRequestWrapper(httpServletRequest), response);
     }
 }

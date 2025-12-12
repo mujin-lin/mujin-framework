@@ -112,7 +112,7 @@ public class MjHttpRequestWrapper extends HttpServletRequestWrapper {
     public Enumeration<String> getHeaders(String name) {
         List<String> headerValues = this.headers.get(name);
         if (CollectionUtil.isEmpty(headerValues)) {
-            return null;
+            return new IteratorEnumeration<>(Collections.emptyIterator());
         }
         return new IteratorEnumeration<>(headerValues.iterator());
     }

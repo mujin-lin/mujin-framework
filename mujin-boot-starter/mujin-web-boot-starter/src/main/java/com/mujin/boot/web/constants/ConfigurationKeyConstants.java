@@ -20,5 +20,5 @@ public final class ConfigurationKeyConstants {
     /**
      * 请求日志配置类
      */
-    public static final String MUJIN_COMMONS_REQUEST_LOG_CONFIG_KEY = "sjchn.web.config.request";
+    public static final String MUJIN_COMMONS_REQUEST_LOG_CONFIG_KEY = "mujin.web.config.request";
 }

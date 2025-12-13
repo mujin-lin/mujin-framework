@@ -1,17 +1,16 @@
 package com.mujin.security;
 
-
 import cn.hutool.core.collection.CollectionUtil;
 import com.mujin.security.constants.SecurityConfigurationConstants;
-import com.mujin.security.filter.MjHttpServletRequestWrapperFilter;
 import com.mujin.security.interceptor.ValidatorInterceptor;
+import com.mujin.security.properties.MjSecurityRequestProperties;
 import com.mujin.security.validator.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,30 +20,16 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 自动配置类
+ * 验证器的自动配置类
  *
  * @author chenglin.wu
- * @date 2025/12/6
+ * @date 2025/12/13
  */
-@AutoConfigureAfter(Environment.class)
-public class MujinSecurityAutoConfiguration {
-
-    /**
-     * 请求包装类的 filter
-     *
-     * @return FilterRegistrationBean<MjHttpServletRequestWrapperFilter>
-     * @date 2025/12/10
-     */
-    @Bean
-    @ConditionalOnBooleanProperty(value = SecurityConfigurationConstants.ENABLE_REQUEST_WRAPPER)
-    public FilterRegistrationBean<MjHttpServletRequestWrapperFilter> filterRegistrationBean() {
-        FilterRegistrationBean<MjHttpServletRequestWrapperFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new MjHttpServletRequestWrapperFilter());
-        filterRegistrationBean.addUrlPatterns("/*");
-        filterRegistrationBean.setOrder(1);
-        return filterRegistrationBean;
-    }
-
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnBean(SecurityValidatorConfigurer.class)
+@ConditionalOnBooleanProperty(value = SecurityConfigurationConstants.ENABLE_SECURITY_VALIDATOR)
+@AutoConfigureAfter({Environment.class, SecurityValidatorConfigurer.class})
+public class ValidatorAutoConfiguration {
     /**
      * 是否开启安全验证链
      *
@@ -52,9 +37,7 @@ public class MujinSecurityAutoConfiguration {
      * @date 2025/12/10
      */
     @Bean
-    @ConditionalOnBooleanProperty(value = SecurityConfigurationConstants.ENABLE_SECURITY_VALIDATOR)
-    @ConditionalOnBean(SecurityValidatorConfigurer.class)
-    public WebMvcConfigurer createWebMvcConfigurer(ObjectProvider<SecurityValidatorConfigurer> securityValidatorConfigurer) {
+    public WebMvcConfigurer createWebMvcConfigurer(ObjectProvider<SecurityValidatorConfigurer> securityValidatorConfigurer,MjSecurityRequestProperties securityRequestProperties) {
         SecurityValidatorRegistry registry = new SecurityValidatorRegistry();
 
         securityValidatorConfigurer.stream()
@@ -74,7 +57,7 @@ public class MujinSecurityAutoConfiguration {
         if (CollectionUtil.isNotEmpty(validators)) {
             validatorChain = this.buildValidatorChainRecursively(validators, 0);
         }
-        return new ValidatorConfigurationChain(validatorChain);
+        return new ValidatorConfigurationChain(validatorChain,securityRequestProperties);
     }
 
     /**
@@ -90,11 +73,11 @@ public class MujinSecurityAutoConfiguration {
             return null;
         }
 
-        // 1. 创建当前链节点
+        // 创建当前链节点
         ConfigValidatorChain currentChain = new ConfigValidatorChain();
-        // 2. 绑定当前索引对应的校验器（修正原代码仅第一个节点绑定的问题）
+        // 绑定当前索引对应的校验器（修正原代码仅第一个节点绑定的问题）
         currentChain.setValidator(validators.get(index));
-        // 3. 递归构建下一个节点，并设置为当前节点的后续链
+        // 递归构建下一个节点，并设置为当前节点的后续链
         ConfigValidatorChain nextChain = buildValidatorChainRecursively(validators, index + 1);
         currentChain.setChain(nextChain);
 
@@ -105,11 +88,11 @@ public class MujinSecurityAutoConfiguration {
     /**
      * mvc config 用来包装验证器
      */
-    private record ValidatorConfigurationChain(ConfigValidatorChain chain) implements WebMvcConfigurer {
+    private record ValidatorConfigurationChain(ConfigValidatorChain chain,MjSecurityRequestProperties securityRequestProperties) implements WebMvcConfigurer {
 
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(new ValidatorInterceptor(chain)).addPathPatterns("/**").order(Integer.MIN_VALUE);
+            registry.addInterceptor(new ValidatorInterceptor(chain,securityRequestProperties)).addPathPatterns("/**").order(Integer.MIN_VALUE);
         }
     }
 
@@ -120,10 +103,6 @@ public class MujinSecurityAutoConfiguration {
     private static class ConfigValidatorChain extends SecurityValidatorChain {
 
         public ConfigValidatorChain() {
-        }
-
-        public ConfigValidatorChain(SecurityValidator validator) {
-            super(validator);
         }
 
         /**
@@ -146,5 +125,4 @@ public class MujinSecurityAutoConfiguration {
             super.addNext(chain);
         }
     }
-
 }

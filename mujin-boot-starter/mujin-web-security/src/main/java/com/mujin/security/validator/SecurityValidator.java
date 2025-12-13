@@ -1,5 +1,8 @@
 package com.mujin.security.validator;
 
+import com.mujin.security.validator.context.AfterHandlerValidatorContext;
+import com.mujin.security.validator.context.PreHandleValidatorContext;
+
 /**
  * 校验器
  *
@@ -13,12 +16,12 @@ public interface SecurityValidator {
      *
      * @date 2025/12/06
      */
-    void validateBefore();
+    void validateBefore(PreHandleValidatorContext context);
 
     /**
      * 请求执行完成释放资源等
      *
      * @date 2025/12/06
      */
-    void validateAfter();
+    void validateAfter(AfterHandlerValidatorContext context);
 }

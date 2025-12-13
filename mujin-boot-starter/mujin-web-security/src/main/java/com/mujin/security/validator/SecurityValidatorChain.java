@@ -1,5 +1,8 @@
 package com.mujin.security.validator;
 
+import com.mujin.security.validator.context.AfterHandlerValidatorContext;
+import com.mujin.security.validator.context.PreHandleValidatorContext;
+
 import java.util.Objects;
 
 /**
@@ -26,27 +29,23 @@ public class SecurityValidatorChain implements SecurityValidator {
         this.addValidator(null);
     }
 
-    public SecurityValidatorChain(SecurityValidator validator) {
-        this.addValidator(validator);
-    }
-
     @Override
-    public void validateBefore() {
+    public void validateBefore(PreHandleValidatorContext context) {
         if (hasValidator) {
-            this.validator.validateBefore();
+            this.validator.validateBefore(context);
         }
         if (Objects.nonNull(this.nextValidatorChain)) {
-            this.nextValidatorChain.validateBefore();
+            this.nextValidatorChain.validateBefore(context);
         }
     }
 
     @Override
-    public void validateAfter() {
+    public void validateAfter(AfterHandlerValidatorContext context) {
         if (Objects.nonNull(this.nextValidatorChain)) {
-            this.nextValidatorChain.validateAfter();
+            this.nextValidatorChain.validateAfter(context);
         }
         if (hasValidator) {
-            this.validator.validateAfter();
+            this.validator.validateAfter(context);
         }
     }
 

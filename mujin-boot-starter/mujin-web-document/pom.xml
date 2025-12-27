@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.mujin.boot</groupId>
         <artifactId>mujin-boot-starter</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>mujin-web-document</artifactId>

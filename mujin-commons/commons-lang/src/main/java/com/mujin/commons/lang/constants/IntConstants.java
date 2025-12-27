@@ -4,7 +4,7 @@ package com.mujin.commons.lang.constants;
  * int常用常量
  *
  * @author chenglin.wu
- * @date 2021/4/16
+ * @date 2025/12/27
  */
 @SuppressWarnings("unused")
 public final class IntConstants {

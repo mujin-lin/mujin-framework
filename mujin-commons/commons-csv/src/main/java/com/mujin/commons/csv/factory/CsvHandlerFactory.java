@@ -360,7 +360,7 @@ public class CsvHandlerFactory {
      * @date 2025/11/23
      */
     private static <T> T read2Obj(Class<T> tClass, String[] dataArray, Map<Integer, String> rowNumHeaderMap, Map<String, FieldCacheEntry> headerAliasEntry, Function<String, Boolean> boolFunction) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        T t = tClass.newInstance();
+        T t = tClass.getConstructor().newInstance();
         // 处理数据
         for (int i = 0; i < dataArray.length; i++) {
             String header = rowNumHeaderMap.get(i);

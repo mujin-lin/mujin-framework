@@ -8,7 +8,7 @@ import com.mujin.commons.lang.code.BaseErrorCode;
  * 业务异常
  *
  * @author chenglin.wu
- * @date 2021/4/16
+ * @date 2025/12/27
  */
 @SuppressWarnings("unused")
 public class BusinessException extends CommonsException {

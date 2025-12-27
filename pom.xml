@@ -2,14 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.8</version>
-    </parent>
     <groupId>com.mujin</groupId>
     <artifactId>mujin-framework</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>mujin-framework</name>
@@ -19,38 +14,51 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.source.version>3.3.1</maven.source.version>
+        <!-- 基础编译配置（简化：release 替代 source/target，兼容 JDK 9+） -->
         <maven.compiler.release>21</maven.compiler.release>
-        <maven.doc.version>3.11.3</maven.doc.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!-- 插件版本（升级 Javadoc 插件适配 JDK 21） -->
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
+        <maven.source.version>3.4.0</maven.source.version>
+        <!-- 适配 JDK 21 的稳定版 -->
+        <maven.doc.version>3.6.3</maven.doc.version>
+
+        <!-- 依赖版本 -->
         <spring.boot.version>3.5.8</spring.boot.version>
         <lombok.version>1.18.42</lombok.version>
         <hutool.version>5.8.41</hutool.version>
         <jackson.version>2.19.2</jackson.version>
-        <jackson-datatype.version>3.0.0-rc2</jackson-datatype.version>
+        <apache-lang3.version>3.20.0</apache-lang3.version>
+        <mybatis-plus.version>3.5.15</mybatis-plus.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- 工程依赖 -->
-            <!-- 外部依赖 -->
+            <!-- Spring Boot 依赖管理（核心） -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
+                <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- lombok -->
+
+            <!-- MyBatis-Plus BOM -->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            <!-- hu-tool -->
+
+            <!-- 工具类依赖 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache-lang3.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-bom</artifactId>
@@ -58,7 +66,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- jackson -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <!-- Jackson（移除冗余的 jackson-datatype.version，统一用 jackson.version） -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
@@ -73,75 +86,105 @@
     </dependencyManagement>
 
     <build>
+        <!-- 核心优化：插件版本统一管理，子模块按需继承（避免强制执行） -->
+        <pluginManagement>
+            <plugins>
+                <!-- 编译插件（适配 Lombok + JDK 21 + 消除 Lint 警告） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <!-- 简化：替代 source/target -->
+                        <release>${maven.compiler.release}</release>
+                        <encoding>UTF-8</encoding>
+                        <compilerArgs>
+                            <!-- 保留参数名，便于反射 -->
+                            <arg>-parameters</arg>
+                            <!-- 显示泛型未检查警告（可选） -->
+                            <arg>-Xlint:unchecked</arg>
+                            <!-- 显示过时API警告（可选） -->
+                            <arg>-Xlint:deprecation</arg>
+                            <!-- 隐藏无关的 options 提示 -->
+                            <arg>-Xlint:-options</arg>
+                        </compilerArgs>
+                        <!-- 关键：适配 Lombok 注解处理器 -->
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- 源码打包插件（统一管理，子模块按需执行） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Javadoc 插件（升级版本 + 精简配置 + 适配 JDK 21） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven.doc.version}</version>
+                    <configuration>
+                        <!-- 错误不终止构建 -->
+                        <failOnError>false</failOnError>
+                        <encoding>UTF-8</encoding>
+                        <!-- 禁用所有文档检查 -->
+                        <doclint>none</doclint>
+                        <additionalOptions>
+                            <!-- 忽略源码错误 -->
+                            <additionalOption>--ignore-source-errors</additionalOption>
+                            <!-- 兼容注释脚本 -->
+                            <additionalOption>--allow-script-in-comments</additionalOption>
+                        </additionalOptions>
+                        <additionalJOptions>
+                            <!-- 抑制Javadoc警告 -->
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <additionalJOption>--release</additionalJOption>
+                            <!-- 适配 JDK 21 -->
+                            <additionalJOption>21</additionalJOption>
+                        </additionalJOptions>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <!-- 生成Javadoc Jar -->
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- 父模块仅执行编译插件（核心插件），其他插件由子模块按需引用 -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!-- 源代码使用的Java版本 -->
-                    <source>21</source>
-                    <!-- 目标JVM的字节码版本 -->
-                    <target>21</target>
-                    <!-- 可选的：设置编译器的编码 -->
-                    <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-Xlint:-options</arg> <!-- 隐藏相关提示 -->
-                    </compilerArgs>
-                </configuration>
             </plugin>
-            <!-- 要生成Javadoc和Source jar文件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <!-- 3. 禁用所有检查 -->
-                    <additionalOptions>
-                        <additionalOption>-Xdoclint:none</additionalOption>
-                        <additionalOption>--ignore-source-errors</additionalOption>
-                        <!-- 如果确实需要，使用等价的现代参数 -->
-                        <additionalOption>--allow-script-in-comments</additionalOption>
-                    </additionalOptions>
-                    <!-- 解决注解处理器警告 -->
-                    <additionalJOptions>
-                        <!-- 抑制所有Javadoc警告 -->
-                        <additionalOption>-Xdoclint:none</additionalOption>
-                    </additionalJOptions>
-                    <!-- 5. 跳过缺失包的检查 -->
-                    <doclint>none</doclint>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>  <!-- 生成javadoc jar -->
-                        </goals>
-                        <configuration> <!-- add this to disable checking -->
-                            <additionalJOptions>
-                                <!-- 抑制所有Javadoc警告 -->
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                            </additionalJOptions>
-                            <additionalOptions>
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                                <additionalOption>--ignore-source-errors</additionalOption>
-                            </additionalOptions>
-                            <doclint>none</doclint>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

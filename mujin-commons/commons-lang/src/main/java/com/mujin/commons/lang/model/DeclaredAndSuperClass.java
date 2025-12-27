@@ -14,6 +14,7 @@ import java.util.List;
  *
  * @author chenglin.wu
  */
+@Getter
 public class DeclaredAndSuperClass {
 
     private final Class<?> declaredClass;

@@ -20,12 +20,12 @@ public class OtherCsvReader extends CsvOtherAbstractHandler {
 
     @Override
     public <T> void readCsvData(CsvHandlerEnum csvHandlerEnum, FieldCacheEntry cacheEntry, String columData, T tObject, Function<String, Boolean> boolFunction) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        Object newInstance = cacheEntry.getFieldClass().newInstance();
+        Object newInstance = cacheEntry.getFieldClass().getConstructor().newInstance();
         if (Objects.isNull(cacheEntry.getGenericsSubClass())) {
             Method method = cacheEntry.getFieldClass().getMethod(cacheEntry.getSetterInvokeMethodVal(), String.class);
             method.invoke(newInstance, columData);
         } else {
-            Object subInstance = cacheEntry.getGenericsSubClass().newInstance();
+            Object subInstance = cacheEntry.getGenericsSubClass().getConstructor().newInstance();
             cacheEntry.getGenericsSubSetterMethod().invoke(subInstance, columData);
             cacheEntry.getGenericsMainSetterMethod().invoke(newInstance, subInstance);
         }

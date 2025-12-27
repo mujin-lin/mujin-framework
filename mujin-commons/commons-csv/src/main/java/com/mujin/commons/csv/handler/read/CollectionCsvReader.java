@@ -24,10 +24,10 @@ import java.util.function.Function;
  * @author chenglin.wu
  * @date 2025/11/23
  */
-@SuppressWarnings("All")
 public class CollectionCsvReader extends CsvCollectionAbstractHandler {
 
     @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public <T> void readCsvData(CsvHandlerEnum csvHandlerEnum, FieldCacheEntry fieldCacheEntry, String columData, T tObject, Function<String, Boolean> boolFunction) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         if (StrUtil.isBlank(columData)) {
             return;
@@ -81,7 +81,7 @@ public class CollectionCsvReader extends CsvCollectionAbstractHandler {
         }
         // 如果泛型中的对象不能直接赋值，则需要先创建对象
         for (String str : columDataArr) {
-            Object subObj = genericsSubClass.newInstance();
+            Object subObj = genericsSubClass.getConstructor().newInstance();
             // 调用子类的赋值方法
             subSetterMethod.invoke(subObj, str);
             collection.add(subObj);

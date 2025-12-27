@@ -5,7 +5,7 @@ package com.mujin.commons.web.constants;
  * 反射相关常量
  *
  * @author chenglin.wu
- * @date 2021/4/16 13:18
+ * @date 2025/12/27 13:18
  */
 public final class ReflectConstants {
 

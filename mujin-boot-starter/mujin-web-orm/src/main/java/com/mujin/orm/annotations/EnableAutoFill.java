@@ -1,6 +1,8 @@
 package com.mujin.orm.annotations;
 
-import com.mujin.orm.AutoFillRegister;
+import com.mujin.orm.AutoFillComponentSelector;
+import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
@@ -15,7 +17,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(AutoFillRegister.class)
+@Import(AutoFillComponentSelector.class)
 public @interface EnableAutoFill {
     /**
      * 需要扫描的包
@@ -36,9 +38,32 @@ public @interface EnableAutoFill {
     String[] basePackages() default "";
 
     /**
-     * 排除掉不扫描的包名
+     * 是否将框架内部的默认填充类注入容器
      *
-     * @return String[]
+     * @return boolean
      */
-    String[] excludePackages() default "";
+    boolean enableFrameworkFill() default true;
+
+
+    /**
+     * 通过类指定扫描包（优先级高于basePackages）
+     * 示例：basePackageClasses = UserFillHandler.class → 扫描UserFillHandler所在包
+     *
+     * @return class 数组
+     */
+    Class<?>[] basePackageClasses() default {};
+
+    /**
+     * 排除不需要注册的填充处理器类
+     *
+     * @return class 数组
+     */
+    Class<?>[] excludeClasses() default {};
+
+    /**
+     * 自定义BeanName生成器（默认使用Spring注解BeanName生成器）
+     *
+     * @return like {@link BeanNameGenerator}
+     */
+    Class<? extends BeanNameGenerator> nameGenerator() default AnnotationBeanNameGenerator.class;
 }

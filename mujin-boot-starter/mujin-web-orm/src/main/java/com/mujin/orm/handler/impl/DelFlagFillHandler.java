@@ -1,8 +1,9 @@
-package com.mujin.orm.handler;
+package com.mujin.orm.handler.impl;
 
 
 import com.mujin.commons.lang.constants.IntConstants;
 import com.mujin.orm.dto.AutoFillDto;
+import com.mujin.orm.handler.InsertFillColumnHandler;
 
 /**
  * 删除标志的自动填充处理

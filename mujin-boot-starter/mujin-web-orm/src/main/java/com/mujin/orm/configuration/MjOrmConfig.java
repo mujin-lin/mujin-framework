@@ -27,4 +27,9 @@ public class MjOrmConfig {
      * 开启分页插件拦截
      */
     private boolean openPageInterceptor = true;
+
+    /**
+     * 开启分页插件拦截
+     */
+    private boolean enableAutoFill = true;
 }

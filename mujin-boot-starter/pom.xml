@@ -40,6 +40,35 @@
                 <artifactId>commons-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-orm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

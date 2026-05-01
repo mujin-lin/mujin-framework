@@ -31,6 +31,7 @@
         <jackson.version>2.19.2</jackson.version>
         <apache-lang3.version>3.20.0</apache-lang3.version>
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
+        <expiringmap.version>0.5.11</expiringmap.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +82,11 @@
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jodah</groupId>
+                <artifactId>expiringmap</artifactId>
+                <version>${expiringmap.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

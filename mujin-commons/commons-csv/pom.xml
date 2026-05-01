@@ -5,6 +5,7 @@
         <groupId>com.mujin.commons</groupId>
         <artifactId>mujin-commons</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>commons-csv</artifactId>
     <name>commons-csv</name>

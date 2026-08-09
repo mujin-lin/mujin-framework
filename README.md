@@ -78,8 +78,6 @@ mvn clean install -Dmaven.javadoc.skip=true
 mvn -pl mujin-commons/commons-lang -am clean install
 ```
 
-> 本机 Maven 路径参考 `~/.claude/projects/.../memory/maven-path.md`。
-
 ---
 
 ## 🧩 模块配置与使用

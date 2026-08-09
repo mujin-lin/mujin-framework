@@ -1,0 +1,56 @@
+# 顶层配置
+root = true
+
+# 通用配置：所有文件
+[*]
+charset                  = utf-8
+end_of_line              = crlf
+insert_final_newline     = true
+trim_trailing_whitespace = true
+indent_style             = space
+indent_size              = 4
+tab_width                = 4
+max_line_length          = 180
+
+# Java 源码：4 空格缩进，与项目 pom 中 -parameters 一致
+[*.java]
+indent_style  = space
+indent_size   = 4
+tab_width     = 4
+continuation_indent_size = 8
+
+# Maven 配置
+[*.xml]
+indent_style  = space
+indent_size   = 4
+tab_width     = 4
+
+# properties / yaml 缩进 2
+[*.{properties,yaml,yml}]
+indent_style = space
+indent_size  = 2
+
+# JSON / Markdown
+[*.json]
+indent_style = space
+indent_size  = 2
+
+[*.md]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size  = 2
+max_line_length = off
+
+# SQL / Shell
+[*.sql]
+indent_style = space
+indent_size  = 2
+
+[*.sh]
+end_of_line = lf
+indent_style = space
+indent_size  = 2
+
+# Windows 平台默认 CRLF，其他平台跟随 git 配置即可
+[*]
+end_of_line = crlf

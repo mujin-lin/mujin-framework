@@ -1,7 +1,7 @@
 package com.mujin.commons.csv.exception;
 
 
-import com.mujin.commons.lang.constants.IntConstants;
+import com.mujin.commons.csv.enums.CsvErrorEnum;
 import com.mujin.commons.lang.exception.CommonsException;
 
 /**
@@ -13,18 +13,18 @@ public class CsvException extends CommonsException {
 
 
     public CsvException(String message) {
-        super(IntConstants.INT_100, message);
+        super(CsvErrorEnum.CSV_ERROR, message);
     }
 
-    public CsvException(int errorCode, String message) {
+    public CsvException(CsvErrorEnum errorCode, String message) {
         super(errorCode, message);
     }
 
     public CsvException(String message, Throwable cause) {
-        this(IntConstants.INT_100, message, cause);
+        this(CsvErrorEnum.CSV_ERROR, message, cause);
     }
 
-    public CsvException(int errorCode, String message, Throwable cause) {
+    public CsvException(CsvErrorEnum errorCode, String message, Throwable cause) {
         super(errorCode, message, cause);
     }
 }

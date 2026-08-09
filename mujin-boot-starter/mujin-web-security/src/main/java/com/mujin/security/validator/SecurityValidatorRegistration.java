@@ -1,0 +1,45 @@
+package com.mujin.security.validator;
+
+
+import lombok.Getter;
+/**
+ * 校验器注册包装类
+ *
+ * @author chenglin.wu
+ * @date 2025/12/6
+ */
+@Getter
+public class SecurityValidatorRegistration {
+
+    /**
+     * 安全验证器
+     */
+    private final SecurityValidator securityValidator;
+    /**
+     * 排序
+     */
+    private int order;
+
+    /**
+     * 创建时间
+     */
+    private final long timestamp;
+
+
+    public SecurityValidatorRegistration(SecurityValidator securityValidator) {
+        this.securityValidator = securityValidator;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    /**
+     * 执行顺序
+     *
+     * @param order 执行顺序
+     * @return SecurityValidatorRegistration
+     * @date 2025/12/07
+     */
+    public SecurityValidatorRegistration order(int order) {
+        this.order = order;
+        return this;
+    }
+}

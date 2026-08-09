@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
-import com.mujin.commons.csv.annontations.CsvIgnore;
+import com.mujin.commons.csv.annotations.CsvIgnore;
 import com.mujin.commons.csv.config.BoolSupplierConfig;
 import com.mujin.commons.csv.config.CsvHandlerConfig;
 import com.mujin.commons.csv.constants.CsvHandlerConstants;
@@ -360,7 +360,7 @@ public class CsvHandlerFactory {
      * @date 2025/11/23
      */
     private static <T> T read2Obj(Class<T> tClass, String[] dataArray, Map<Integer, String> rowNumHeaderMap, Map<String, FieldCacheEntry> headerAliasEntry, Function<String, Boolean> boolFunction) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        T t = tClass.newInstance();
+        T t = tClass.getConstructor().newInstance();
         // 处理数据
         for (int i = 0; i < dataArray.length; i++) {
             String header = rowNumHeaderMap.get(i);

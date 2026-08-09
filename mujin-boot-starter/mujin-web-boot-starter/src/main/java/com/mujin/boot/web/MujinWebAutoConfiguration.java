@@ -1,9 +1,10 @@
 package com.mujin.boot.web;
 
+
 import com.mujin.boot.web.constants.ConfigurationKeyConstants;
 import com.mujin.commons.web.configuration.CommonsProperties;
 import com.mujin.commons.web.configuration.CorsConfigProperties;
-import com.mujin.commons.web.configuration.RequestInfoPrintConfig;
+import com.mujin.commons.web.configuration.RequestInfoPrintProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,6 @@ public class MujinWebAutoConfiguration {
      * 使用加密解密的 manager 配置指定
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean
@@ -33,7 +33,6 @@ public class MujinWebAutoConfiguration {
      * 跨域配置的类
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean
@@ -47,13 +46,12 @@ public class MujinWebAutoConfiguration {
      * 请求日志打印配置
      *
      * @return CommonsProperties
-     * @author chenglin.wu
      * @date 2025/11/23
      */
     @Bean
     @ConditionalOnMissingBean
     @ConfigurationProperties(ConfigurationKeyConstants.MUJIN_COMMONS_REQUEST_LOG_CONFIG_KEY)
-    public RequestInfoPrintConfig createRequestInfoPrintConfig() {
-        return new RequestInfoPrintConfig();
+    public RequestInfoPrintProperties createRequestInfoPrintConfig() {
+        return new RequestInfoPrintProperties();
     }
 }

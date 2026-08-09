@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 /**
  * 集合和数组处理handler抽象类，抽象的目的是为了兼容reader和writer的getHandlerType
+ *
  * @author chenglin.wu
  */
 public abstract class CsvCollectionAbstractHandler implements CsvReadHandler, CsvWriteHandler {

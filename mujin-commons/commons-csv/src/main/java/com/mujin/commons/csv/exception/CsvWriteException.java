@@ -1,5 +1,7 @@
 package com.mujin.commons.csv.exception;
 
+import com.mujin.commons.csv.enums.CsvErrorEnum;
+
 /**
  * 将指定数据集合写出成 csv 格式字符串或者文件的异常
  *
@@ -8,6 +10,6 @@ package com.mujin.commons.csv.exception;
 public class CsvWriteException extends CsvException {
 
     public CsvWriteException(String message) {
-        super(message);
+        super(CsvErrorEnum.CSV_WRITE_ERROR,message);
     }
 }

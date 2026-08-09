@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,13 +23,12 @@ import java.util.*;
 /**
  * 自定义的json 格式化类
  *
- * @author  chenglin.wu
+ * @author chenglin.wu
  * @date 2025/11/23
  */
 @SuppressWarnings("unused")
 public final class JsonUtil {
 
-    private final static Logger log = LoggerFactory.getLogger(JsonUtil.class);
     /**
      * 日期时间格式
      */
@@ -39,10 +37,6 @@ public final class JsonUtil {
      * 日期格式
      */
     public static final String DATE_PATTERN = "yyyy-MM-dd";
-    /**
-     * 默认时区
-     */
-    private final static String DEFAULT_ZONED_ID = "Asia/Shanghai";
     /**
      * json mapper 对象
      */
@@ -84,7 +78,6 @@ public final class JsonUtil {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .addModule(javaTimeModule)
                 .addModule(simpleModule)
-                .defaultTimeZone(TimeZone.getTimeZone("GMT+8:00"))
                 .defaultDateFormat(new JsonDateTimeFormatter()).build();
     }
 
@@ -162,7 +155,7 @@ public final class JsonUtil {
             if (isThrowException) {
                 throw new RuntimeException(e);
             }
-            log.error(e.getMessage(), e);
+
         }
         return null;
     }
@@ -199,7 +192,6 @@ public final class JsonUtil {
             if (isThrowException) {
                 throw new RuntimeException(e);
             }
-            log.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -369,7 +361,7 @@ public final class JsonUtil {
         if (StrUtil.isBlank(text)) {
             return null;
         }
-        return toObject(text, new TypeReference<Map<String, Object>>() {
+        return toObject(text, new TypeReference<>() {
         });
     }
 
@@ -380,12 +372,10 @@ public final class JsonUtil {
      * @return LinkedHashMap<String, Object>
      */
     public static LinkedHashMap<String, Object> toLinkedMap(String text) {
-        if (StrUtil.isBlank(text)) {
-            return null;
-        }
-        return toObject(text, new TypeReference<LinkedHashMap<String, Object>>() {
+        return toMap(text, new TypeReference<>() {
         });
     }
+
 
     /**
      * JSON字符串转换为JsonNode
@@ -443,10 +433,7 @@ public final class JsonUtil {
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
                 //反序列化的时候如果多了其他属性,不抛出异常
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                // 配置下划线到驼峰命名的自动转换
-                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
                 .addModule(javaTimeModule)
-                .defaultTimeZone(TimeZone.getTimeZone("GMT+8:00"))
                 .defaultDateFormat(new JsonDateTimeFormatter()).build();
     }
 
@@ -459,13 +446,13 @@ public final class JsonUtil {
     private static class JsonDateTimeFormatter extends SimpleDateFormat {
 
         private static SimpleDateFormat initFormats() {
-            SimpleDateFormat format = new SimpleDateFormat(JsonUtil.DATE_TIME_PATTERN, Locale.CHINA);
-            format.setTimeZone(TimeZone.getTimeZone(DEFAULT_ZONED_ID));
+            SimpleDateFormat format = new SimpleDateFormat(JsonUtil.DATE_TIME_PATTERN, Locale.getDefault());
+            format.setTimeZone(TimeZone.getDefault());
             return format;
         }
 
         @Override
-        public Date parse(String value, ParsePosition pos) {
+        public Date parse(@NonNull String value, @NonNull ParsePosition pos) {
             try {
                 return toDate(value, pos);
             } catch (ParseException e) {
@@ -480,7 +467,7 @@ public final class JsonUtil {
         }
 
         @Override
-        public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+        public StringBuffer format(@NonNull Date date, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition fieldPosition) {
             DateFormat formatter = initFormats();
             return new StringBuffer(formatter.format(date));
         }
@@ -510,5 +497,20 @@ public final class JsonUtil {
             }
             return super.parse(value, pos);
         }
+    }
+
+    /**
+     * JSON字符串转换为Map
+     *
+     * @param text          json 字符串
+     * @param typeReference 类型
+     * @return Map<String, Object>
+     */
+    private static <M> M toMap(String text, TypeReference<M> typeReference) {
+        if (StrUtil.isBlank(text)) {
+            return null;
+        }
+        return toObject(text, Objects.nonNull(typeReference) ? typeReference : new TypeReference<>() {
+        });
     }
 }

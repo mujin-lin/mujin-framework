@@ -772,25 +772,25 @@ public class Application {
 
 ## ❓ 常见问题（FAQ）
 
-**Q1：模块那么多，必须全部引入吗？**
+**Q1：模块那么多，必须全部引入吗？**  
 按需引入：`commons-lang` 是基础，几乎所有业务都需要；其他 starter 按业务场景选择。
 
-**Q2：操作日志如何关闭某个方法？**
+**Q2：操作日志如何关闭某个方法？**  
 不写 `@OperationLog` 注解即可；也可以设置全局 `mujin.logging.enabled=false` 关闭整个模块。
 
-**Q3：脱敏 `@LogMask` 对嵌套字段生效吗？**
+**Q3：脱敏 `@LogMask` 对嵌套字段生效吗？**  
 生效。`ParamJsonSerializer` 基于 Jackson `BeanSerializerModifier`，对每个 Bean 的字段递归检查注解，嵌套对象 / 集合元素 / Map 值均自动继承。
 
-**Q4：操作日志如何与现有 traceId 体系对接？**
+**Q4：操作日志如何与现有 traceId 体系对接？**  
 `WebContextCollector` 优先从请求头 `X-Trace-Id` 读取，业务侧在过滤器中写入即可；异步线程通过 `MdcTaskDecorator` 自动透传 MDC。
 
-**Q5：DB 模式下表已经存在，自动建表会破坏数据吗？**
+**Q5：DB 模式下表已经存在，自动建表会破坏数据吗？**  
 不会。`OperationLogSchemaInitializer` 使用 `CREATE TABLE IF NOT EXISTS`，幂等且不影响已有数据。
 
-**Q6：自定义校验器如何控制顺序？**
+**Q6：自定义校验器如何控制顺序？**  
 注册时指定 order：`registry.add(myValidator, 100)`，order 越小越先执行。
 
-**Q8：如何替换框架默认的 collector / LogStorage？**
+**Q8：如何替换框架默认的 collector / LogStorage？**  
 实现对应接口后声明为 Spring Bean，框架通过 `@ConditionalOnMissingBean` 自动让位。
 
 ---

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +37,6 @@ public final class JsonUtil {
      * 日期格式
      */
     public static final String DATE_PATTERN = "yyyy-MM-dd";
-    /**
-     * 默认时区
-     */
-    private final static String DEFAULT_ZONED_ID = "Asia/Shanghai";
     /**
      * json mapper 对象
      */
@@ -81,7 +78,6 @@ public final class JsonUtil {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .addModule(javaTimeModule)
                 .addModule(simpleModule)
-                .defaultTimeZone(TimeZone.getTimeZone("GMT+8:00"))
                 .defaultDateFormat(new JsonDateTimeFormatter()).build();
     }
 
@@ -437,10 +433,7 @@ public final class JsonUtil {
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
                 //反序列化的时候如果多了其他属性,不抛出异常
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                // 配置下划线到驼峰命名的自动转换
-                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
                 .addModule(javaTimeModule)
-                .defaultTimeZone(TimeZone.getTimeZone("GMT+8:00"))
                 .defaultDateFormat(new JsonDateTimeFormatter()).build();
     }
 
@@ -453,13 +446,13 @@ public final class JsonUtil {
     private static class JsonDateTimeFormatter extends SimpleDateFormat {
 
         private static SimpleDateFormat initFormats() {
-            SimpleDateFormat format = new SimpleDateFormat(JsonUtil.DATE_TIME_PATTERN, Locale.CHINA);
-            format.setTimeZone(TimeZone.getTimeZone(DEFAULT_ZONED_ID));
+            SimpleDateFormat format = new SimpleDateFormat(JsonUtil.DATE_TIME_PATTERN, Locale.getDefault());
+            format.setTimeZone(TimeZone.getDefault());
             return format;
         }
 
         @Override
-        public Date parse(String value, ParsePosition pos) {
+        public Date parse(@NonNull String value, @NonNull ParsePosition pos) {
             try {
                 return toDate(value, pos);
             } catch (ParseException e) {
@@ -474,7 +467,7 @@ public final class JsonUtil {
         }
 
         @Override
-        public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+        public StringBuffer format(@NonNull Date date, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition fieldPosition) {
             DateFormat formatter = initFormats();
             return new StringBuffer(formatter.format(date));
         }

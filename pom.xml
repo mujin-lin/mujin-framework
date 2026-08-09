@@ -23,6 +23,13 @@
         <maven.source.version>3.4.0</maven.source.version>
         <!-- 适配 JDK 21 的稳定版 -->
         <maven.doc.version>3.6.3</maven.doc.version>
+        <maven.checkstyle.version>3.5.0</maven.checkstyle.version>
+        <checkstyle.config.location>${maven.multiModuleProjectDirectory}/checkstyle.xml</checkstyle.config.location>
+        <checkstyle.suppressions.location>${maven.multiModuleProjectDirectory}/suppressions.xml</checkstyle.suppressions.location>
+        <!-- 默认关闭 Checkstyle（CI 可通过 -Dcheckstyle.skip=false 显式开启） -->
+        <checkstyle.skip>true</checkstyle.skip>
+        <checkstyle.failsOnError>false</checkstyle.failsOnError>
+        <checkstyle.violationSeverity>warning</checkstyle.violationSeverity>
 
         <!-- 依赖版本 -->
         <spring.boot.version>3.5.8</spring.boot.version>
@@ -175,6 +182,45 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!-- Checkstyle 插件（统一规则，子模块按需激活） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven.checkstyle.version}</version>
+                    <dependencies>
+                        <!-- 9.x 内核支持 JDK 21 + Lambda 参数等 -->
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>10.17.0</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <configLocation>${checkstyle.config.location}</configLocation>
+                        <suppressionsLocation>${checkstyle.suppressions.location}</suppressionsLocation>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <enableRulesSummary>true</enableRulesSummary>
+                        <consoleOutput>true</consoleOutput>
+                        <!-- 渐进式：默认仅警告，不阻断构建；CI 可通过 -Dcheckstyle.skip=false 打开 -->
+                        <failsOnError>${checkstyle.failsOnError}</failsOnError>
+                        <violationSeverity>${checkstyle.violationSeverity}</violationSeverity>
+                        <linkXRef>false</linkXRef>
+                        <skip>${checkstyle.skip}</skip>
+                        <sourceDirectories>
+                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                        </sourceDirectories>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate-style</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -191,6 +237,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

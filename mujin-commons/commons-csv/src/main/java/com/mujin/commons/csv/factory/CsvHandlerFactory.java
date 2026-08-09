@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
-import com.mujin.commons.csv.annontations.CsvIgnore;
+import com.mujin.commons.csv.annotations.CsvIgnore;
 import com.mujin.commons.csv.config.BoolSupplierConfig;
 import com.mujin.commons.csv.config.CsvHandlerConfig;
 import com.mujin.commons.csv.constants.CsvHandlerConstants;

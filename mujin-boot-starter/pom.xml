@@ -20,24 +20,37 @@
         <module>mujin-web-cache</module>
         <module>mujin-web-orm</module>
         <module>mujin-web-logging</module>
-        <module>mujin-web-document</module>
+        <module>mujin-web-logging-db</module>
+        <module>mujin-web-logging-kafka</module>
+        <module>mujin-web-model</module>
+        <!-- mujin-web-document 暂未完成，待实现后再启用 -->
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!-- 公共模块：commons-* 子模块统一在此 manage，避免子模块声明时缺 version -->
             <dependency>
-                <groupId>com.mujin.boot</groupId>
-                <artifactId>mujin-web-security</artifactId>
+                <groupId>com.mujin.commons</groupId>
+                <artifactId>commons-lang</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.mujin.commons</groupId>
                 <artifactId>commons-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mujin.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -65,7 +78,19 @@
 
             <dependency>
                 <groupId>com.mujin.boot</groupId>
-                <artifactId>mujin-web-document</artifactId>
+                <artifactId>mujin-web-logging-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-logging-kafka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mujin.boot</groupId>
+                <artifactId>mujin-web-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

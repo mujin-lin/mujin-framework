@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+  Checkstyle 抑制规则。
+  对 Lombok 生成的方法、放宽到工具类的某些字段等场景进行抑制。
+-->
+
+<suppressions>
+    <!-- Lombok 生成的 getter/setter 不需要 Javadoc -->
+    <suppress checks="JavadocMethod" files=".*\.java" lines="0-9999"
+              message="Missing a Javadoc comment for method"/>
+
+    <!-- @Data / @Value 类的字段不要求单独 Javadoc（类层级已说明） -->
+    <suppress checks="JavadocVariable" files=".*\.java"/>
+
+    <!-- Target/Retention/Documented 注解不需要再写 Javadoc -->
+    <suppress checks="JavadocType" files=".*[\\/]annotations[\\/].*\.java"/>
+
+    <!-- DTO/Model 类的字段命名允许下划线常量化（如 MM_dd 等） -->
+    <suppress checks="MemberName" files=".*Model\.java"/>
+
+    <!-- JsonUtil 内部匿名格式化类 -->
+    <suppress checks="OneStatementPerLine" files="JsonUtil\.java"/>
+</suppressions>

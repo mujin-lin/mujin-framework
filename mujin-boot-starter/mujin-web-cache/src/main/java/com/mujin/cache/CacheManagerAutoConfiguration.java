@@ -30,7 +30,6 @@ import java.util.Objects;
  * @author chenglin.wu
  * @date 2026-05-01
  */
-//@Configuration
 public class CacheManagerAutoConfiguration {
 
     @Value("${spring.cache.cache-names:}")
@@ -62,7 +61,6 @@ public class CacheManagerAutoConfiguration {
      * @author chenglin.wu
      * @date 2026-05-01
      */
-//    @Bean
     public CacheManagerCustomizers cacheManagerCustomizers(ObjectProvider<CacheManagerCustomizer<?>> customizers) {
         return new CacheManagerCustomizers(customizers.orderedStream().toList());
     }

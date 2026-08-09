@@ -9,6 +9,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -28,6 +29,7 @@ import java.util.Objects;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnBean(SecurityValidatorConfigurer.class)
 @ConditionalOnBooleanProperty(value = SecurityConfigurationConstants.ENABLE_SECURITY_VALIDATOR)
+@EnableConfigurationProperties(MjSecurityRequestProperties.class)
 @AutoConfigureAfter({Environment.class, SecurityValidatorConfigurer.class})
 public class ValidatorAutoConfiguration {
     /**

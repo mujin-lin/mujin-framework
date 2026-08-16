@@ -1,5 +1,6 @@
 package com.mujin.document.util.pdf;
 
+import com.mujin.document.util.PdfBoxTextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;

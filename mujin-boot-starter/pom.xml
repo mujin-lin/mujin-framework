@@ -37,6 +37,10 @@
             <groupId>com.mujin.commons</groupId>
             <artifactId>commons-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+        </dependency>
     </dependencies>
     <packaging>pom</packaging>
     <modules>

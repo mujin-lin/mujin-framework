@@ -1,13 +1,9 @@
 package com.mujin.document.util;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * PDFBox 文本处理工具类
@@ -186,10 +182,6 @@ public final class PdfBoxTextUtils {
      * @return float 高度（磅）
      */
     public static float fontHeight(PDFont font, float size) {
-        try {
-            return font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000f * size;
-        } catch (IOException e) {
-            return size * 1.2f;
-        }
+        return font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000f * size;
     }
 }

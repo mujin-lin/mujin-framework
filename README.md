@@ -77,10 +77,23 @@ mujin-framework
 │   ├── mujin-web-logging-db/            # 操作日志 DB 存储（MyBatis-Plus + 自动建表）
 │   ├── mujin-web-logging-kafka/         # 操作日志 Kafka 存储
 │   ├── mujin-web-document/              # 接口文档（OpenAPI + Swagger UI + PDF）
-│   └── mujin-web-model/                 # 通用 DTO/VO
+│   │   └── README.md                    # 模块完整使用手册
+│   └── mujin-web-model/                 # 通用 DTO/VO（占位模块）
 │
-├── docs/                                # 架构与设计文档
-│   └── architecture.md                  # 模块依赖 / 请求处理 / 扩展点
+├── docs/                                # 架构与设计文档（详细分类见 docs/README.md）
+│   ├── architecture.md                  # 框架整体架构
+│   ├── logging-design.md                # 操作日志设计
+│   ├── mujin-web-document-architecture.md
+│   ├── mujin-web-boot-starter-architecture.md
+│   ├── mujin-web-cache-architecture.md
+│   ├── mujin-web-orm-architecture.md
+│   ├── mujin-web-logging-architecture.md
+│   ├── mujin-web-security-architecture.md
+│   ├── mujin-web-model-architecture.md
+│   ├── commons-lang-architecture.md
+│   ├── commons-web-architecture.md
+│   ├── commons-csv-architecture.md
+│   └── README.md                        # 文档目录索引
 │
 ├── CHANGELOG.md                         # 版本变更记录
 ├── CONTRIBUTING.md                      # 贡献指南

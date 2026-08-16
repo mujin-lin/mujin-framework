@@ -39,6 +39,12 @@
         <apache-lang3.version>3.20.0</apache-lang3.version>
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <expiringmap.version>0.5.11</expiringmap.version>
+        <!-- 文档模块版本 -->
+        <springdoc-openapi.version>2.7.0</springdoc-openapi.version>
+        <openapi-generator.version>7.10.0</openapi-generator.version>
+        <swagger-codegen.version>3.0.52</swagger-codegen.version>
+        <itext7.version>7.2.5</itext7.version>
+        <pdfbox.version>3.0.3</pdfbox.version>
     </properties>
 
     <dependencyManagement>
@@ -94,6 +100,46 @@
                 <groupId>net.jodah</groupId>
                 <artifactId>expiringmap</artifactId>
                 <version>${expiringmap.version}</version>
+            </dependency>
+            <!-- 文档模块依赖管理 -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator</artifactId>
+                <version>${openapi-generator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen</artifactId>
+                <version>${swagger-codegen.version}</version>
+            </dependency>
+            <!--
+                iText 7 自 2021 起改用 AGPL v3 许可证，强传染协议，禁止作为商业闭源产品的依赖。
+                本框架已切换至 Apache PDFBox 3.x（Apache License 2.0）。
+            -->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <!-- PDFBox 字体子模块，用于中文字体注册 -->
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>fontbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <!--
+                springdoc-openapi-starter-webmvc-api：纯 API 模式（不包含 Swagger UI），
+                业务方可选择性引入 webmvc-ui 启用 UI。
+            -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+                <version>${springdoc-openapi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

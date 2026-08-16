@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCust
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -30,6 +31,8 @@ import java.util.Objects;
  * @author chenglin.wu
  * @date 2026-05-01
  */
+@Configuration
+@ConditionalOnProperty(prefix = "mujin.cache", name = "enabled", matchIfMissing = false)
 public class CacheManagerAutoConfiguration {
 
     @Value("${spring.cache.cache-names:}")

@@ -1,6 +1,6 @@
 # mujin-framework
 
-> 一个基于 **Spring Boot 3.5.x + JDK 21** 的中文企业级开发框架，提供通用工具、Web 增强、缓存、安全、ORM、操作日志等开箱即用的能力。
+> 一个基于 **Spring Boot 3.5.x + JDK 21** 的中文企业级开发框架，提供通用工具、Web 增强、缓存、安全、ORM、操作日志、接口文档等开箱即用的能力。
 > 所有源代码使用 **中文注释** 与 **中文错误信息**，便于国内团队维护。
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -29,6 +29,33 @@
 | ⚡️ 缓存       | Redis + 本地 `ExpiringMap`、`@EnableCacheCustomizer` 注解式 cacheName 与 TTL   |
 | 🗃️ ORM        | MyBatis-Plus 增强：自动填充、`@SearchColumn` 动态查询、`DefaultEntity`         |
 | 📜 操作日志    | `@OperationLog` AOP 织入 + 异步执行 + `@LogMask` 脱敏 + DB/FILE/Kafka 三种后端 |
+| 📑 接口文档    | 基于 springdoc-openapi 2.7 + Apache PDFBox 3 的 OpenAPI 3 / Swagger UI / PDF  |
+
+## 🔌 插件化原则
+
+`mujin-framework` 所有 starter 遵循 **"按需启用"** 原则——**引入依赖 ≠ 启用功能**。
+
+- 核心基础设施（`mujin-web-boot-starter`、`mujin-web-model`）：默认开启，无需配置。
+- 可选功能模块（`document` / `logging` / `cache` / `orm` / `security`）：默认 **关闭**，业务方必须在 `application.yml` 显式 `enabled=true` 才生效。
+
+| 模块 | 默认 | 启用属性 |
+| --- | --- | --- |
+| `mujin-web-boot-starter` | ✅ | （无开关） |
+| `mujin-web-model` | ✅ | （无开关） |
+| `mujin-web-document` | ❌ | `mujin.document.enabled=true` |
+| `mujin-web-logging` | ❌ | `mujin.logging.enabled=true` |
+| `mujin-web-cache` | ❌ | `mujin.cache.enabled=true` |
+| `mujin-web-orm` | ❌ | `mujin.orm.enabled=true` |
+| `mujin-web-security` | ❌ | `mujin.web.config.request.security.validator-enable=true` |
+
+> 📘 详细的开关矩阵与扩展点参见 [`docs/architecture.md`](docs/architecture.md)。
+
+## 📜 许可证合规
+
+`mujin-framework` 作为被多个业务项目以**二进制依赖**形式引用的基础框架，**禁止**引入任何 **copyleft 强传染协议**（GPL / AGPL）的依赖。
+
+- **iText 7** 自 2021 年起改用 AGPL v3，框架已切换到 **Apache PDFBox 3.0.3**（Apache License 2.0，可商用）。
+- 所有依赖的许可证清单参见 [`docs/architecture.md` 附录](docs/architecture.md)。
 
 ## 📦 模块结构
 
@@ -41,16 +68,24 @@ mujin-framework
 │   ├── commons-csv/                     # CSV 序列化与反序列化
 │   └── commons-web/                     # Web 通用：注解/请求/响应/校验
 │
-└── mujin-boot-starter/                  # Spring Boot 自动装配
-    ├── mujin-web-boot-starter/          # 入口装配（CommonsProperties / CORS / 请求日志）
-    ├── mujin-web-security/              # 安全：校验器链 + 请求体包装
-    ├── mujin-web-cache/                 # 缓存：Redis / 本地 ExpiringMap
-    ├── mujin-web-orm/                   # ORM：MyBatis-Plus 增强
-    ├── mujin-web-logging/               # 操作日志：注解 / 采集器 / AOP / 异步 / FILE
-    ├── mujin-web-logging-db/            # 操作日志 DB 存储（MyBatis-Plus + 自动建表）
-    ├── mujin-web-logging-kafka/         # 操作日志 Kafka 存储
-    ├── mujin-web-document/              # 接口文档（规划中）
-    └── mujin-web-model/                 # 通用 DTO/VO（占位，规划中）
+├── mujin-boot-starter/                  # Spring Boot 自动装配
+│   ├── mujin-web-boot-starter/          # 入口装配（CommonsProperties / CORS / 请求日志）
+│   ├── mujin-web-security/              # 安全：校验器链 + 请求体包装
+│   ├── mujin-web-cache/                 # 缓存：Redis / 本地 ExpiringMap
+│   ├── mujin-web-orm/                   # ORM：MyBatis-Plus 增强
+│   ├── mujin-web-logging/               # 操作日志：注解 / 采集器 / AOP / 异步 / FILE
+│   ├── mujin-web-logging-db/            # 操作日志 DB 存储（MyBatis-Plus + 自动建表）
+│   ├── mujin-web-logging-kafka/         # 操作日志 Kafka 存储
+│   ├── mujin-web-document/              # 接口文档（OpenAPI + Swagger UI + PDF）
+│   └── mujin-web-model/                 # 通用 DTO/VO
+│
+├── docs/                                # 架构与设计文档
+│   └── architecture.md                  # 模块依赖 / 请求处理 / 扩展点
+│
+├── CHANGELOG.md                         # 版本变更记录
+├── CONTRIBUTING.md                      # 贡献指南
+├── checkstyle.xml                       # Checkstyle 主规则
+└── rule.md                              # 项目说明 + AI 编码规范
 ```
 
 ## 🚀 快速开始
@@ -145,6 +180,7 @@ throw new BusinessException(OrderErrorCode.ORDER_NOT_FOUND, "订单 " + id + " �
 ```
 
 #### 关键 API
+
 
 `com.mujin.commons.csv.CsvOperateUtil` 静态方法：
 
@@ -656,22 +692,117 @@ public class OrderCreateReq {
 
 ---
 
-### 9. `mujin-web-document` / `mujin-web-model`（规划中）
+### 9. `mujin-web-document` — 接口文档
 
-两个模块当前为占位状态，尚未提供代码。后续将分别承载接口文档生成与通用 DTO/VO 模型。
+基于 [springdoc-openapi 2.7.0](https://springdoc.org/) + Apache PDFBox 3.x 的接口文档模块，提供 OpenAPI 3.0 自动生成、Swagger UI、JSON / YAML 规范导出、PDF 文档导出。
+
+#### 引入依赖
+
+```xml
+<dependency>
+    <groupId>com.mujin.boot</groupId>
+    <artifactId>mujin-web-document</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+#### 启用方式（按需）
+
+`mujin-web-document` 默认关闭，需在 `application.yml` 显式启用：
+
+```yaml
+mujin:
+  document:
+    enabled: true                       # 启用接口文档（默认 false）
+    title: "业务系统 API 文档"
+    version: "1.0.0"
+    description: "基于 OpenAPI 3.0 自动生成"
+
+    swagger-ui:
+      path: /doc.html                   # Swagger UI 路径
+      enabled: true
+
+    pdf-export:
+      enabled: true                     # 启用 PDF 导出（默认 false）
+      engine: PDFBOX                    # PDF 生成引擎（当前仅 PDFBOX）
+      font-path: /opt/fonts/simhei.ttf  # 中文字体 TTF/OTF（可选）
+      page-size: A4                     # A4 / LETTER
+      include-examples: true            # PDF 是否包含调用示例
+      include-models: true              # PDF 是否包含数据模型
+```
+
+#### 关键特性
+
+- **零配置扫描**：springdoc 2.7 默认扫描整个 Spring 应用上下文中所有 `@RestController` / `@RequestMapping`，第三方包（如 `com.jjj.xxx`）的 Controller **自动被识别**，无需配置 `packagesToScan`。
+- **分组支持**：可选地在 `application.yml` 配置 `mujin.document.groups[]` 进行多模块分组。
+- **REST 接口**：模块自动注册以下控制器（无需业务方编写）：
+
+| 接口 | 方法 | 说明 |
+| --- | --- | --- |
+| `/v3/api-docs` | GET | springdoc 默认合并 OpenAPI 规范 |
+| `/v3/api-docs/{group}` | GET | 分组级 OpenAPI 规范 |
+| `/swagger-ui.html` | GET | springdoc 默认 Swagger UI |
+| `/api-docs/groups` | GET | 获取可用分组列表 |
+| `/api-docs/spec/{group}` | GET | 获取指定分组的 OpenAPI JSON |
+| `/api-docs/export/json` | GET | 下载 OpenAPI JSON 文件 |
+| `/api-docs/export/yaml` | GET | 下载 OpenAPI YAML 文件 |
+| `/api-docs/export/pdf` | POST | 生成 PDF 文档（请求体 `ExportRequest`） |
+
+#### 调用示例（PDF 导出）
+
+```bash
+curl -X POST http://localhost:8080/api-docs/export/pdf \
+  -H "Content-Type: application/json" \
+  -d '{
+    "format": "PDF",
+    "includeExamples": true,
+    "includeModels": true,
+    "pageSize": "A4",
+    "languages": ["curl", "java", "python", "javascript"]
+  }' \
+  -o api-document.pdf
+```
+
+#### 中文字体配置
+
+PDF 默认使用 PDFBox 内置 Helvetica，**不支持中文**。需提供 TTF 字体文件：
+
+```yaml
+mujin:
+  document:
+    pdf-export:
+      font-path: classpath:fonts/simhei.ttf
+```
+
+或者绝对路径 `font-path: /usr/share/fonts/simhei.ttf`。字体未找到时自动降级到 Helvetica（中文显示 `?`）。
+
+#### 与 springdoc 的关系
+
+`mujin-web-document` 不重新扫描 Controller，而是**复用 springdoc 生成的 `OpenAPI` Bean**。这意味着：
+
+- 业务方无需引入额外的 `springdoc-openapi-starter-webmvc-ui` 依赖（`mujin-web-document` 已经传递引入）。
+- 所有 springdoc 注解（`@Operation` / `@Parameter` / `@Schema` / `@Tag` 等）天然生效。
+
+---
+
+### 10. `mujin-web-model` — 通用 DTO/VO
+
+当前为占位模块，预留承载跨 starter 共享的响应包装 `ResponseResult<T>`、分页模型等基础类型。
+
+> 当前响应包装位于 `commons-web` 的 `com.mujin.commons.web.response.ResponseResult`，未来可能迁移至本模块。
 
 ---
 
 ## 📋 完整 application.yml 模板
 
-下面整合所有 starter 的核心配置，可直接拷贝使用：
+下面整合所有 starter 的核心配置，可直接拷贝使用。**注意：可选模块默认关闭，需显式启用**：
 
 ```yaml
 spring:
   application:
     name: demo-app
 
-  # ===== 缓存（mujin-web-cache）=====
+  # ===== 缓存（mujin-web-cache，需启用）=====
   cache:
     type: REDIS
     cache-names: userCache, orderCache
@@ -694,7 +825,7 @@ spring:
     bootstrap-servers: localhost:9092
 
 mujin:
-  # ===== 入口（mujin-web-boot-starter）=====
+  # ===== 入口（mujin-web-boot-starter 默认启用）=====
   web:
     config:
       commons:
@@ -715,21 +846,21 @@ mujin:
         print-request-browser: true
         print-request-param: true
         print-request-body: true
-      # 安全（mujin-web-security）
+      # 安全（mujin-web-security，需 mujin.security.enabled=true）
       request.security:
         wrapper-enable: true
         validator-enable: true
-      # ORM（mujin-web-orm）
+      # ORM（mujin-web-orm，需 mujin.orm.enabled=true）
       orm:
         open-page-interceptor: true
         optimistic-locker: false
         block-attack-inner: false
         enable-auto-fill: true
 
-  # ===== 操作日志（mujin-web-logging）=====
+  # ===== 操作日志（mujin-web-logging，需显式启用）=====
   logging:
-    enabled: true
-    storage-type: DB                       # DB / FILE / KAFKA
+    enabled: true                        # ⚠️ 默认 false
+    storage-type: DB                     # DB / FILE / KAFKA
     async: true
     thread-pool-size: 4
     queue-capacity: 1024
@@ -742,10 +873,32 @@ mujin:
     db:
       table-prefix: mujin_
       auto-create-table: true
-      datasource-bean-name: ""             # 留空=复用业务数据源
+      datasource-bean-name: ""           # 留空=复用业务数据源
     kafka:
       topic: mujin-operation-log
       bootstrap-servers: localhost:9092
+
+  # ===== 缓存（mujin-web-cache，需显式启用）=====
+  cache:
+    enabled: true                        # ⚠️ 默认 false
+
+  # ===== ORM 增强（mujin-web-orm，需显式启用）=====
+  orm:
+    enabled: true                        # ⚠️ 默认 false
+
+  # ===== 接口文档（mujin-web-document，需显式启用）=====
+  document:
+    enabled: true                        # ⚠️ 默认 false
+    title: "业务系统 API 文档"
+    version: "1.0.0"
+    swagger-ui:
+      path: /doc.html
+      enabled: true
+    pdf-export:
+      enabled: true                      # ⚠️ 默认 false
+      engine: PDFBOX
+      font-path: /opt/fonts/simhei.ttf   # 中文字体（可选）
+      page-size: A4
 ```
 
 启动类：
@@ -771,7 +924,7 @@ public class Application {
 ## ❓ 常见问题（FAQ）
 
 **Q1：模块那么多，必须全部引入吗？**  
-按需引入：`commons-lang` 是基础，几乎所有业务都需要；其他 starter 按业务场景选择。
+按需引入：`commons-lang` 是基础，几乎所有业务都需要；其他 starter 按业务场景选择。**引入依赖 ≠ 启用功能**，可选模块默认关闭，需 `application.yml` 显式 `enabled=true`。
 
 **Q2：操作日志如何关闭某个方法？**  
 不写 `@OperationLog` 注解即可；也可以设置全局 `mujin.logging.enabled=false` 关闭整个模块。
@@ -788,8 +941,20 @@ public class Application {
 **Q6：自定义校验器如何控制顺序？**  
 注册时指定 order：`registry.add(myValidator, 100)`，order 越小越先执行。
 
+**Q7：mujin-web-document 引入后，为什么 `/v3/api-docs` 是空的？**  
+需在 `application.yml` 设置 `mujin.document.enabled=true`。`mujin-web-document` 默认关闭——这是插件化原则，不开启就不会注入 `OpenAPI` Bean。
+
 **Q8：如何替换框架默认的 collector / LogStorage？**  
 实现对应接口后声明为 Spring Bean，框架通过 `@ConditionalOnMissingBean` 自动让位。
+
+**Q9：第三方项目（`com.jjj.xxx`）的 Controller 会被 mujin-web-document 自动扫描到吗？**  
+会。`mujin-web-document` 完全依赖 springdoc 2.7 的默认行为——扫描整个 Spring 应用上下文中所有 `@RestController` / `@RequestMapping`，无需配置 `packagesToScan`。springdoc 默认在 `/v3/api-docs` 暴露合并后的 OpenAPI，PDF 导出也会包含第三方接口。
+
+**Q10：PDF 导出时中文显示为 `?`，如何修复？**  
+PDFBox 内置 Helvetica 不支持中文。需在 `mujin.document.pdf-export.font-path` 配置 TTF 字体路径（如 `/usr/share/fonts/simhei.ttf` 或 `classpath:fonts/simhei.ttf`）。字体未找到时自动降级，中文会显示 `?`。
+
+**Q11：为什么用 Apache PDFBox 而非 iText 7？**  
+iText 7 自 2021 年起改用 AGPL v3 许可证，强传染协议——任何"通过网络向用户提供"的应用（即便内网）必须开源。`mujin-framework` 作为被多个业务项目以二进制形式引用的基础框架，禁止引入此类依赖。PDFBox 3.x 是 Apache License 2.0，可商用、无传染性。详见 [`docs/architecture.md` §许可证合规](docs/architecture.md)。
 
 ---
 
@@ -802,36 +967,43 @@ public class Application {
 - **Lombok**：业务模型优先 `@Data`；工具类**不要**用 Lombok，构造方法必须私有化。
 - **异常**：必须复用 `commons-lang` 的 `BusinessException` / `FrameworkException` / `CommonsException`，按业务域段划分错误码。
 - **Spring 装配**：`XxxAutoConfiguration` 配套 `@Configuration` + 必要的 `@ConditionalOnXxx`，注册到 `META-INF/spring/.../AutoConfiguration.imports`。
+- **插件化**：可选 starter 必须使用 `@ConditionalOnProperty(..., matchIfMissing = false)`，业务方显式启用。
+- **许可证合规**：禁止引入 AGPL / GPL 强传染协议依赖（如 iText 7）。
 
 ---
 
 ## 🧱 技术栈
 
-| 维度         | 版本                |
-|--------------|---------------------|
-| JDK          | 21                  |
-| Spring Boot  | 3.5.8               |
-| Lombok       | 1.18.42             |
-| Hutool       | 5.8.41              |
-| Jackson      | 2.19.2              |
-| commons-lang3| 3.20.0              |
-| MyBatis-Plus | 3.5.15              |
-| ExpiringMap  | 0.5.11              |
+| 维度 | 版本 | 备注 |
+| --- | --- | --- |
+| JDK | 21 | 启用 `-parameters` |
+| Spring Boot | 3.5.8 | 父 BOM 统一管理 |
+| Lombok | 1.18.42 | 必须使用，注解处理器已配置 |
+| Hutool | 5.8.41 | 工具库，引入 hutool-bom |
+| Jackson | 2.19.2 | databind + jsr310 |
+| commons-lang3 | 3.20.0 | Apache Commons Lang |
+| MyBatis-Plus | 3.5.15 | ORM（仅 mujin-web-orm 引入） |
+| ExpiringMap | 0.5.11 | 本地过期缓存 |
+| springdoc-openapi | 2.7.0 | OpenAPI 3 / Swagger UI |
+| Apache PDFBox | 3.0.3 | PDF 导出（仅 mujin-web-document） |
+| Apache POI / OpenHTMLtoPDF | — | 后续版本可选 |
 
 ## 📏 代码风格与规范
 
-| 文件                                       | 说明                                   |
-|--------------------------------------------|----------------------------------------|
-| [`rule.md`](rule.md)                   | 项目说明 + 8 段代码示例（AI 必读）     |
-| [`checkstyle.xml`](checkstyle.xml)         | Checkstyle 主规则                      |
-| [`suppressions.xml`](suppressions.xml)     | Checkstyle 抑制规则                    |
-| [`.editorconfig`](.editorconfig)           | 跨 IDE 缩进/编码/行尾                  |
-| [`.idea/codeStyles/Project.xml`](.idea/codeStyles/Project.xml) | IDEA Code Style            |
-| [`.idea/fileTemplates/internal/*`](.idea/fileTemplates/internal) | IDEA 文件模板             |
+| 文件 | 说明 |
+| --- | --- |
+| [`rule.md`](rule.md) | 项目说明 + 8 段代码示例（AI 必读） |
+| [`checkstyle.xml`](checkstyle.xml) | Checkstyle 主规则 |
+| [`suppressions.xml`](suppressions.xml) | Checkstyle 抑制规则 |
+| [`.editorconfig`](.editorconfig) | 跨 IDE 缩进/编码/行尾 |
+| [`.idea/codeStyles/Project.xml`](.idea/codeStyles/Project.xml) | IDEA Code Style |
+| [`.idea/fileTemplates/internal/*`](.idea/fileTemplates/internal) | IDEA 文件模板 |
 | [`.idea/templates/mujin-framework.xml`](.idea/templates/mujin-framework.xml) | IDEA Live Template |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md)       | 贡献指南（分支 / 提交 / PR）           |
-| [`SETUP.md`](SETUP.md)                     | 在 IDEA / VSCode / Eclipse 中启用配置  |
-| [`docs/logging-design.md`](docs/logging-design.md) | 操作日志详细设计             |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | 贡献指南（分支 / 提交 / PR） |
+| [`SETUP.md`](SETUP.md) | 在 IDEA / VSCode / Eclipse 中启用配置 |
+| [`docs/logging-design.md`](docs/logging-design.md) | 操作日志详细设计 |
+| [`docs/architecture.md`](docs/architecture.md) | 架构图与扩展点 |
+| [`CHANGELOG.md`](CHANGELOG.md) | 版本变更记录 |
 
 CI 默认执行 `mvn checkstyle:check`，未通过禁止合并。
 
@@ -857,6 +1029,9 @@ CI 默认执行 `mvn checkstyle:check`，未通过禁止合并。
 ## 📄 License
 
 本项目基于 [Apache License 2.0](LICENSE) 开源。
+
+> 所有依赖均为 Apache 2.0 / MIT / LGPL 等宽松许可证，**不含 AGPL / GPL 强传染协议**。
+> 历史版本曾使用的 iText 7（AGPL v3）已替换为 Apache PDFBox 3.x。
 
 ## 👥 维护者
 

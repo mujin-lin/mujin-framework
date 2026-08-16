@@ -11,19 +11,25 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 自动配置类
+ * ORM 自动配置类
+ * <p>
+ * 仅在 {@code mujin.orm.enabled=true} 且已注册 {@link MjOrmConfig} 时生效。
  *
  * @author chenglin.wu
  * @date 2025/12/27
  */
+@Configuration
 @AutoConfigureAfter(MjOrmConfig.class)
+@ConditionalOnProperty(prefix = "mujin.orm", name = "enabled", matchIfMissing = false)
 public class OrmAutoConfiguration {
 
     /**

@@ -43,14 +43,14 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableConfigurationProperties(LoggingProperties.class)
-@ConditionalOnProperty(prefix = "mujin.logging", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "mujin.logging", name = "enabled", matchIfMissing = false)
 public class LoggingAutoConfiguration {
 
     /**
      * 异步写入开关：开启时启用 {@link EnableAsync} 与 {@link LoggingExecutor}
      */
     @Configuration
-    @ConditionalOnProperty(prefix = "mujin.logging", name = "async", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "mujin.logging", name = "async", matchIfMissing = false)
     @EnableAsync
     public static class AsyncConfig {
 

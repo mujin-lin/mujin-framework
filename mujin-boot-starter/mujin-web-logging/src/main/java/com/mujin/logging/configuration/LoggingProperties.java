@@ -19,9 +19,9 @@ import java.util.List;
 public class LoggingProperties {
 
     /**
-     * 总开关，默认开启
+     * 总开关，默认关闭（按需启用）
      */
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     /**
      * 存储后端类型
